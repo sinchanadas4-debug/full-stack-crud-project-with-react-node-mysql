@@ -1,0 +1,61 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - todo_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 20s
+      retries: 10
+
+  backend:
+    image: ${DOCKERHUB_USER}/mern-backend:${IMAGE_TAG}
+    container_name: backend-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: mysql
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_TABLENAME: users
+      DB_WAITFORCONNECTIONS: "true"
+      DB_CONNECTIONLIMIT: "10"
+      DB_QUEUELIMIT: "0"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - todo_network
+
+  frontend:
+    image: ${DOCKERHUB_USER}/mern-frontend:${IMAGE_TAG}
+    container_name: frontend-app
+    restart: unless-stopped
+    ports:
+      - "80:5000"
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    depends_on:
+      - backend
+    networks:
+      - todo_network
+
+volumes:
+  db_data:
+
+networks:
+  todo_network:
+    name: todo_network
+    driver: bridge

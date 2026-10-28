@@ -79,7 +79,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - VITE_API_URL=http://<Your Machine IP>:3000 # Change to your backend API URL Like http://192.168.81.207:3000
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3000} # Change to your backend API URL Like http://192.168.81.207:3000
     depends_on:
       - backend
     networks:
