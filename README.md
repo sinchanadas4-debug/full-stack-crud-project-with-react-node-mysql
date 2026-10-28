@@ -352,6 +352,3 @@ MIT License – see `LICENSE` for details.
 ### Original Author: [Mahadi Hassan Razib]
 ### Reviewed & RDS part updated by: [Amir Hossain]
 #### Project Credit: [`Mushfiqur Rahman`] (https://github.com/nia3zzz)
-git add README.md
-git commit -m "update README"
-git push -u origin feature/ readme -update
