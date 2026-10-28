@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+app version = A
+=======
+app version = B
+>>>>>>> feature-b
